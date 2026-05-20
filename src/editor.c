@@ -14,6 +14,7 @@ void edit(char *filename) {
     }
 
     buffer_init();
+    strcpy(current_file, filename);
 
     int i = 0;
     while (i < MAX_LINES && fgets(text_buffer[i].statement, MAX_CHAR, file) != NULL) {
@@ -42,4 +43,25 @@ void edit(char *filename) {
     free_index = i;
 }
 
-void save() {}
+void save() {
+    if (current_file[0] == '\0') {
+        printf("ERROR: No file currently open\n");
+        return;
+    }
+
+    FILE *file = fopen(current_file, "w");
+    
+    if (file == NULL) {
+        printf("ERROR: Could not open file %s for writing\n", current_file);
+        return;
+    }
+
+    int i = head;
+    while (i != -1) {
+        fprintf(file, "%s\n", text_buffer[i].statement);
+        i = text_buffer[i].next;
+    }
+
+    fclose(file);
+    printf("Saved %s\n", current_file);
+}
