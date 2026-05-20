@@ -14,6 +14,8 @@ extern int head;
 extern int tail;
 extern int free_index;
 
+extern char current_file[50];
+
 void buffer_init();
 
 #endif
