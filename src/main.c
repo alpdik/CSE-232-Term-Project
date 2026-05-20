@@ -1,6 +1,6 @@
-#include <stdio.h>
+#include "buffer.h"
 
 int main() {
-    printf("Hello World!");
+    buffer_init();
     return 0;
 }
