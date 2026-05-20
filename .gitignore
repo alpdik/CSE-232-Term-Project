@@ -2,6 +2,8 @@ editor
 
 preprocessed.c
 
+compile_commands.json
+
 *.o
 
 *.swp
