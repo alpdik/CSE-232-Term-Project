@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <string.h>
+#include "buffer.h"
 #include "editor.h"
 #include "buffer.h"
 #include <stddef.h>
@@ -5,6 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 
+<<<<<<< Updated upstream
 void edit(char *filename) {
     FILE *file = fopen(filename, "r");
     
@@ -65,3 +69,77 @@ void save() {
     fclose(file);
     printf("Saved %s\n", current_file);
 }
+=======
+static char current_filename[256] = "";
+
+void edit(char *filename) {
+    FILE *f;
+    char line[MAX_CHAR];
+    int len;
+    int slot;
+    int i;
+
+    strncpy(current_filename, filename, sizeof(current_filename) - 1);
+    current_filename[sizeof(current_filename) - 1] = '\0';
+
+    head = -1;
+    tail = -1;
+    free_index = 0;
+    for (i = 0; i < MAX_LINES; i++) {
+        text_buffer[i].next = -1;
+        text_buffer[i].prev = -1;
+        text_buffer[i].statement[0] = '\0';
+    }
+
+    f = fopen(filename, "r");
+    if (f == NULL) {
+        return;
+    }
+
+    while (fgets(line, MAX_CHAR, f) != NULL && free_index < MAX_LINES) {
+        len = (int)strlen(line);
+        if (len > 0 && line[len - 1] == '\n') {
+            line[len - 1] = '\0';
+        }
+
+        slot = free_index;
+        free_index++;
+
+        strncpy(text_buffer[slot].statement, line, MAX_CHAR);
+        text_buffer[slot].statement[MAX_CHAR - 1] = '\0';
+        text_buffer[slot].prev = tail;
+        text_buffer[slot].next = -1;
+
+        if (tail == -1) {
+            head = slot;
+        } else {
+            text_buffer[tail].next = slot;
+        }
+        tail = slot;
+    }
+
+    fclose(f);
+}
+
+void save() {
+    FILE *f;
+    int i;
+
+    if (current_filename[0] == '\0') {
+        return;
+    }
+
+    f = fopen(current_filename, "w");
+    if (f == NULL) {
+        return;
+    }
+
+    i = head;
+    while (i != -1) {
+        fprintf(f, "%s\n", text_buffer[i].statement);
+        i = text_buffer[i].next;
+    }
+
+    fclose(f);
+}
+>>>>>>> Stashed changes
