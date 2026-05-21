@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(gcc -Wall -Wextra -ansi -pedantic -Iinclude -c src/buffer.c src/gc.c src/operations.c src/editor.c -o /dev/null)",
-      "Bash(gcc -Wall -Wextra -ansi -pedantic -Iinclude -fsyntax-only src/buffer.c src/gc.c src/operations.c src/editor.c)",
-      "Bash(gcc *)"
-    ]
-  }
-}
