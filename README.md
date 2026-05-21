@@ -1,5 +1,7 @@
 # CSE 232 Term Project — Text Editor
 
+Hello World!
+
 ## Requirements
 
 - GCC
