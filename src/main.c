@@ -1,61 +1,68 @@
 #include <stdio.h>
+#include <string.h>
 #include "buffer.h"
 #include "editor.h"
 #include "operations.h"
 #include "gc.h"
 #include "ui.h"
+#include "ui_input.h"
 
-int main() {
+int main(void)
+{
     buffer_init();
 
-    char command[10];
-    int flag = 1;
+    char command[64];
+    int running = 1;
 
-    while (flag) {
+    while (running) {
         printf("> ");
-        scanf("%s", command);
+        fflush(stdout);
+
+        if (scanf("%63s", command) != 1)
+            break;
 
         switch (command[0]) {
-            case 'E': {
-                char filename[50];
-                scanf("%s", filename);
+
+        case 'E': {
+            char filename[50];
+            if (scanf("%49s", filename) == 1)
                 edit(filename);
+            else
+                printf("Usage: E <filename>\n");
+            break;
+        }
 
-                // TODO: START OF TEMPORARY: Print the buffer after editing
-                printf("HEAD: %d\nTAIL: %d\nFREE INDEX: %d\n---------------\n", head, tail, free_index);
-                for (int i = head; i != -1; i = text_buffer[i].next) {
-                    printf("[%d] ", i);
-                    printf("%s ", text_buffer[i].statement);
-                    printf("PREV: %d ", text_buffer[i].prev);
-                    printf("NEXT: %d\n", text_buffer[i].next);
-                }
-                // TODO: END OF TEMPORARY
+        case 'P':
+            print();   /* enters ncurses, returns when user presses Q */
+            break;
 
-                break;
-            }
-            case 'I':
-                insert(cursorLine());
-                break;
-            case 'D':
-                delete(cursorLine());
-                break;
-            case 'R':
-                replace(cursorChar());
-                break;
-            case 'P':
-                print();
-                break;
-            case 'S':
-                save();
-                break;
-            case 'G':
-                garbageCollection();
-                break;
-            case 'Q':
-                flag = 0;
-                break;
-            default:
-                printf("Unknown command\n");
+        case 'S':
+            save();
+            break;
+
+        case 'G':
+            garbageCollection();
+            printf("Garbage collection done.\n");
+            break;
+
+        case 'Q':
+        case 'q':
+            running = 0;
+            break;
+
+        /* I / D / R are handled INSIDE the ncurses print() loop.
+           If someone types them at the main prompt we remind them. */
+        case 'I':
+        case 'D':
+        case 'R':
+            printf("Use P to open the editor, then press %c inside it.\n",
+                   command[0]);
+            break;
+
+        default:
+            printf("Unknown command: %s\n", command);
+            printf("Commands: E <file>  P  S  G  Q\n");
+            break;
         }
     }
 
