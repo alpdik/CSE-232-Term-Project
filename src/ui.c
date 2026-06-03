@@ -73,15 +73,7 @@ void print(void)
 
 int cursorLine(void)
 {
-    int idx = head;
-    int r   = 0;
-
-    while (idx != -1 && r < selected_row) {
-        idx = text_buffer[idx].next;
-        r++;
-    }
-
-    return idx;
+    return selected_row;
 }
 
 int cursorChar(void)
