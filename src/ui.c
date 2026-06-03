@@ -39,6 +39,12 @@ void redraw(void)
         " UP/DOWN: move  |  ENTER: select  |  I: insert  |  D: delete  |  R: replace  |  Q: quit");
     attroff(A_REVERSE);
 
+    if (selected_row >= total_lines && total_lines > 0)
+        selected_row = total_lines - 1;
+
+    if (selected_col < 4)
+        selected_col = 4;
+
     move(selected_row, selected_col);
     refresh();
 }
@@ -67,7 +73,15 @@ void print(void)
 
 int cursorLine(void)
 {
-    return selected_row;
+    int idx = head;
+    int r   = 0;
+
+    while (idx != -1 && r < selected_row) {
+        idx = text_buffer[idx].next;
+        r++;
+    }
+
+    return idx;
 }
 
 int cursorChar(void)
