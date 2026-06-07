@@ -3,6 +3,7 @@
 #include "buffer.h"
 #include "operations.h"
 #include "ui.h"
+#include <ncurses.h>
 
 static int node_at(int pos) {
     int i;
@@ -28,7 +29,12 @@ void insert(int index) {
 
     slot = free_index;
     free_index++;
-    text_buffer[slot].statement[0] = '\0';
+
+    echo();
+    getnstr(text_buffer[slot].statement, MAX_CHAR - 1);
+    noecho();
+
+    text_buffer[slot].statement[MAX_CHAR - 1] = '\0';
 
     if (head == -1) {
         text_buffer[slot].prev = -1;
@@ -38,7 +44,7 @@ void insert(int index) {
         return;
     }
 
-    target = node_at(index);
+    target = index;
 
     if (target == -1) {
         text_buffer[slot].prev = tail;
@@ -46,15 +52,17 @@ void insert(int index) {
         text_buffer[tail].next = slot;
         tail = slot;
     } else {
-        p = text_buffer[target].prev;
-        text_buffer[slot].prev = p;
-        text_buffer[slot].next = target;
-        text_buffer[target].prev = slot;
+        p = text_buffer[target].next;
+
+        text_buffer[slot].prev = target;
+        text_buffer[slot].next = p;
+        text_buffer[target].next = slot;
         if (p == -1) {
-            head = slot;
+            tail = slot;
         } else {
-            text_buffer[p].next = slot;
+            text_buffer[p].prev = slot;
         }
+        
     }
 }
 
@@ -63,7 +71,7 @@ void delete(int index) {
     int p;
     int n;
 
-    target = node_at(index);
+    target = index;
     if (target == -1) {
         return;
     }
@@ -99,12 +107,12 @@ void replace(int index) {
     }
 
     line = cursorLine();
-    target = node_at(line);
+    target = line;
     if (target == -1) {
         return;
     }
 
-    ch = getchar();
+    ch = getch();
     if (ch == EOF || ch == '\n') {
         return;
     }
