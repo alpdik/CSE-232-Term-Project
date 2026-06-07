@@ -24,14 +24,22 @@ void redraw(void)
     total_lines = 0;
 
     while (idx != -1 && row < MAX_LINES) {
-        if (row == selected_row) attron(A_REVERSE);
+        if (row == selected_row)
+            attron(COLOR_PAIR(1));
+        else
+            attron(COLOR_PAIR(3));
+
         mvprintw(row, 0, "%2d: %s", row + 1, text_buffer[idx].statement);
-        if (row == selected_row) attroff(A_REVERSE);
+
+        if (row == selected_row)
+            attroff(COLOR_PAIR(1));
+        else
+            attroff(COLOR_PAIR(3));
 
         idx = text_buffer[idx].next;
         row++;
         total_lines++;
-    }
+    }   
 
     attron(A_REVERSE);
     mvhline(LINES - 1, 0, ' ', COLS);
@@ -55,25 +63,37 @@ void print(void)
         printf("Buffer is empty. Use E <filename> to open a file.\n");
         return;
     }
-
+ 
     initscr();
     cbreak();
     noecho();
     keypad(stdscr, TRUE);
     curs_set(1);
+ 
+    start_color();
+    init_pair(1, COLOR_BLACK, COLOR_GREEN);
+    init_pair(3, COLOR_WHITE, COLOR_BLACK);
 
     selected_row = 0;
     selected_col = 4;
-
+ 
     redraw();
     handleInput();
-
+ 
     endwin();
 }
 
 int cursorLine(void)
 {
-    return selected_row;
+    int idx = head;
+    int r   = 0;
+
+    while (idx != -1 && r < selected_row) {
+        idx = text_buffer[idx].next;
+        r++;
+    }
+
+    return idx;
 }
 
 int cursorChar(void)

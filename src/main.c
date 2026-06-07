@@ -20,17 +20,6 @@ int main() {
                 char filename[50];
                 scanf("%s", filename);
                 edit(filename);
-
-                // TODO: START OF TEMPORARY: Print the buffer after editing
-                printf("HEAD: %d\nTAIL: %d\nFREE INDEX: %d\n---------------\n", head, tail, free_index);
-                for (int i = head; i != -1; i = text_buffer[i].next) {
-                    printf("[%d] ", i);
-                    printf("%s ", text_buffer[i].statement);
-                    printf("PREV: %d ", text_buffer[i].prev);
-                    printf("NEXT: %d\n", text_buffer[i].next);
-                }
-                // TODO: END OF TEMPORARY
-
                 break;
             }
             case 'I':

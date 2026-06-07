@@ -105,11 +105,18 @@ void handleInput(void)
                     }
 
                 } else if (op == 'I' || op == 'i') {
-                    insert(cursorLine());
-                    ui_set_selected_col(4);
-                    redraw();
-                    break;
+                        attron(A_REVERSE);
+                        mvhline(LINES - 1, 0, ' ', COLS);
+                        mvprintw(LINES - 1, 0, " Type new line: ");
+                        attroff(A_REVERSE);
+                        move(LINES - 1, 16);
+                        refresh();
 
+                        insert(cursorLine());
+
+                        ui_set_selected_col(4);
+                        redraw();
+                        break;
                 } else if (op == 'D' || op == 'd') {
                     delete(cursorLine());
 
