@@ -39,6 +39,7 @@ int main() {
                 break;
             case 'G':
                 garbageCollection();
+				printf("Garbage colection compleate! \n");
                 break;
             case 'Q':
                 flag = 0;
