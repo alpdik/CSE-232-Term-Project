@@ -36,8 +36,7 @@ void handleInput(void)
         case KEY_LEFT:
             if (col > 4) {
                 ui_set_selected_col(col - 1);
-                move(ui_get_selected_row(), ui_get_selected_col());
-                refresh();
+                ui_place_cursor();
             }
             break;
 
@@ -50,8 +49,7 @@ void handleInput(void)
                 int len = (int)strlen(text_buffer[idx].statement);
                 if (col < 4 + len - 1) {
                     ui_set_selected_col(col + 1);
-                    move(ui_get_selected_row(), ui_get_selected_col());
-                    refresh();
+                    ui_place_cursor();
                 }
             }
             break;
@@ -83,8 +81,7 @@ void handleInput(void)
 
                     if (c2 > 4) {
                         ui_set_selected_col(c2 - 1);
-                        move(ui_get_selected_row(), ui_get_selected_col());
-                        refresh();
+                        ui_place_cursor();
                     }
 
                 } else if (op == KEY_RIGHT) {
@@ -99,8 +96,7 @@ void handleInput(void)
 
                         if (c2 < 4 + len2 - 1) {
                             ui_set_selected_col(c2 + 1);
-                            move(ui_get_selected_row(), ui_get_selected_col());
-                            refresh();
+                            ui_place_cursor();
                         }
                     }
 
