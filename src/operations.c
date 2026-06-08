@@ -5,18 +5,6 @@
 #include "ui.h"
 #include <ncurses.h>
 
-static int node_at(int pos) {
-    int i;
-    int n;
-
-    i = head;
-    n = 0;
-    while (i != -1 && n < pos) {
-        i = text_buffer[i].next;
-        n++;
-    }
-    return i;
-}
 
 void insert(int index) {
     int slot;
